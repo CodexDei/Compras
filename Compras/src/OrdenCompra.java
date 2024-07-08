@@ -1,9 +1,13 @@
+import java.text.NumberFormat;
 import java.util.Date;
+import java.util.Locale;
 
 public class OrdenCompra {
 
     //Atributos de la clase
-    private Integer idCompra;
+    //Atributos estaticos
+    private static Integer idCompra = 1000;
+    //Atributos no estaticos
     private String descripcionCOmpra;
     private Date fecha;
     private Cliente cliente;
@@ -15,18 +19,19 @@ public class OrdenCompra {
     //Constructor sin parametros
     public OrdenCompra(){
 
-        this.idCompra++;
+        idCompra++;
         productos = new Producto[4];
     }
 
     //COntructores con parametros
     public OrdenCompra(String descripcionCOmpra){
 
+        this();
         this.descripcionCOmpra = descripcionCOmpra;
     }
 
     //Metodos getters
-    public Integer getIdCompra() {
+    public static Integer getIdCompra() {
         return idCompra;
     }
 
@@ -49,6 +54,11 @@ public class OrdenCompra {
     public int getGranTotalPrecios() {
         return granTotalPrecios;
     }
+
+    public int getIndiceProducto() {
+        return indiceProducto;
+    }
+
     //metodos setters
 
     public void setFecha(Date fecha) {
@@ -61,6 +71,7 @@ public class OrdenCompra {
 
     //metodo add
     public void addProducto(Producto producto){
+        if(producto < indiceProducto)
         this.productos[indiceProducto++] = producto;
     }
 
@@ -76,24 +87,26 @@ public class OrdenCompra {
 
         String impresion;
 
-         impresion = "FACTURA\n\n" +
-                "idCompra=" + idCompra + "\n" +
-                ", descripcionCOmpra='" + descripcionCOmpra + "\n" +
-                ", fecha=" + fecha + "\n" +
-                ", cliente=" + cliente + "\n" +
-                ", productos=" + "\n";
+        NumberFormat monedaColombiana = NumberFormat.getCurrencyInstance(new Locale("Es", "CO"));
 
-                 if(productos != null) {
-                     for (Producto producto: productos){
+         impresion = "ORDE DE COMPRA:\n\n" +
+                "idCompra=" + getIdCompra() + "\n" +
+                "descripcionCOmpra=" + getDescripcionCOmpra() + "\n" +
+                "fecha=" + getFecha() + "\n" +
+                "cliente=" + getCliente().getNombre() + " " + getCliente().getApellido() + "\n\n" +
+                "productos=" + "\n\n";
+
+                 if(getProductos() != null) {
+                     for (Producto producto: getProductos()){
                          impresion += "Fabricante: " + producto.getFabricante() + "\n"
                          + "Nombre: " + producto.getNombre() + "\n"
-                         + "Precio " + producto.getPrecio();
+                         + "Precio " + monedaColombiana.format(producto.getPrecio()) + "COP" + "\n\n";
                      }
                  }
 
                  impresion +=
-                 "indiceProducto=" + indiceProducto + "\n" +
-                ", granTotalPrecios=" + granTotalPrecios;
+                 "Cantidad de productos=" +  getIndiceProducto() + "\n" +
+                 "Gran total=" + monedaColombiana.format(getGranTotalPrecios()) + " COP";
 
         return impresion;
     }
