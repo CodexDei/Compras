@@ -71,8 +71,9 @@ public class OrdenCompra {
 
     //metodo add
     public void addProducto(Producto producto){
-        if(producto < indiceProducto)
-        this.productos[indiceProducto++] = producto;
+        if(indiceProducto < 4) {
+            this.productos[indiceProducto++] = producto;
+        }
     }
 
     //metodos de la clase
